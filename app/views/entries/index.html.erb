@@ -1,0 +1,60 @@
+<div id="search">
+  <%= link_to "Start Over", root_path %>
+  
+  <% form_tag(root_path, :method => "get") do %>
+    <%= label_tag :q, "Search title and summary for" %>
+    <%= text_field_tag :q, params[:q] %>
+    <%= submit_tag "Search" %>
+  <% end %>
+    
+  <div id="accordion">
+    <% [:type, :category, :region, :attack_on, :type_of_unit, :sigact, :affiliation, :d_color, :classification, :complex_attack, :friendly_wia, :friendly_kia, :host_nation_wia, :host_nation_kia, :civilian_wia, :civilian_kia, :enemy_wia, :enemy_kia, :enemy_detained, :friendly_casualties, :host_nation_casualties, :civilian_casualties, :enemy_casualties].each do |f| %>
+      <% if @search.facet(f) %>
+        <h3><a href="#"><%= f.to_s.titleize %></a></h3>
+        <div>
+          <ul>
+            <% for row in @search.facet(f).rows -%>
+              <li><%= link_to row.value.blank? ? "(empty)" : row.value.to_s, :overwrite_params => {f => row.value.to_s} %> (<%= row.count %>)</li>
+            <% end -%>
+          </ul>
+        </div>
+      <% else %>
+        <h3><a href="#"><%= f.to_s.titleize %>:  <%= params[f] %></a></h3>
+        <div><%= link_to "Clear Filter", :overwrite_params => { f => nil } %></div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<div id="results">
+  <table>
+    <td colspan="7">
+      <%= will_paginate @search.results %>
+    </td>
+    <tr>
+      <th>Title</th>
+      <th>Date</th>
+      <th>Civilian Casualties</th>
+      <th>Friendly Casualties</th>
+      <th>Host Nation Casualties</th>
+      <th>Enemy Casualties</th>
+      <th>Enemy Detained</th>
+    </tr>
+    <% @search.results.each do |entry| %>
+      <tr>
+        <td class="title"><%= link_to entry.title, entry %></td>
+        <td><%= entry.date %></td>
+        <td><%= entry.civilian_casualties %></td>
+        <td><%= entry.friendly_casualties %></td>
+        <td><%= entry.host_nation_casualties %></td>
+        <td><%= entry.enemy_casualties %></td>
+        <td><%= entry.enemy_detained %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td colspan="7">
+        <%= will_paginate @search.results %>
+      </td>
+    </tr>
+  </table>
+</div>

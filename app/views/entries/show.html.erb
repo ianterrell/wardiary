@@ -1,0 +1,45 @@
+<%= link_to "< Back", :back %>
+
+<h2><%= @entry.title %></h2>
+
+<b>Summary</b>
+<p>
+<%= @entry.summary %>
+</p>
+
+<p><b>Date:</b> <%= @entry.date %></p>
+
+<table id="casualties">
+  <tr>
+    <th>Casualties</th>
+    <th>Friendly</th>
+    <th>Host Nation</th>
+    <th>Civilian</th>
+    <th>Enemy</th>
+  </tr>
+  <tr>
+    <th>Wounded</th>
+    <td><%= @entry.friendly_wia %></td>
+    <td><%= @entry.host_nation_wia %></td>
+    <td><%= @entry.civilian_wia %></td>
+    <td><%= @entry.enemy_wia %></td>
+  </tr>
+  <tr>
+    <th>Killed</th>
+    <td><%= @entry.friendly_kia %></td>
+    <td><%= @entry.host_nation_kia %></td>
+    <td><%= @entry.civilian_kia %></td>
+    <td><%= @entry.enemy_kia %></td>
+  </tr>
+  <tr>
+    <th>Total</th>
+    <td><%= @entry.friendly_casualties %></td>
+    <td><%= @entry.host_nation_casualties %></td>
+    <td><%= @entry.civilian_casualties %></td>
+    <td><%= @entry.enemy_casualties %></td>
+  </tr>
+</table>
+
+<% [:enemy_detained, :type, :category, :region, :attack_on, :reporting_unit, :unit_name, :type_of_unit, :mgrs, :originator_group, :updated_by_group, :ccir, :sigact, :affiliation, :d_color, :classification, :complex_attack, :report_key, :tracking_number].each do |field| %>
+  <p><b><%= field.to_s.titleize %></b>: <%= @entry.send(field).blank? ? "(empty)" : @entry.send(field) %></p>
+<% end %>
